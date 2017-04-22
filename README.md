@@ -1,9 +1,14 @@
-# api documentation for  [cfork (v1.6.0)](https://github.com/node-modules/cfork)  [![npm package](https://img.shields.io/npm/v/npmdoc-cfork.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-cfork) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-cfork.svg)](https://travis-ci.org/npmdoc/node-npmdoc-cfork)
+# npmdoc-cfork
+
+#### api documentation for  [cfork (v1.6.0)](https://github.com/node-modules/cfork)  [![npm package](https://img.shields.io/npm/v/npmdoc-cfork.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-cfork) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-cfork.svg)](https://travis-ci.org/npmdoc/node-npmdoc-cfork)
+
 #### cluster fork and restart easy way
 
-[![NPM](https://nodei.co/npm/cfork.png?downloads=true)](https://www.npmjs.com/package/cfork)
+[![NPM](https://nodei.co/npm/cfork.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/cfork)
 
-[![apidoc](https://npmdoc.github.io/node-npmdoc-cfork/build/screenCapture.buildNpmdoc.browser.%252Fhome%252Ftravis%252Fbuild%252Fnpmdoc%252Fnode-npmdoc-cfork%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-cfork/build/apidoc.html)
+- [https://npmdoc.github.io/node-npmdoc-cfork/build/apidoc.html](https://npmdoc.github.io/node-npmdoc-cfork/build/apidoc.html)
+
+[![apidoc](https://npmdoc.github.io/node-npmdoc-cfork/build/screenCapture.buildCi.browser.%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://npmdoc.github.io/node-npmdoc-cfork/build/apidoc.html)
 
 ![npmPackageListing](https://npmdoc.github.io/node-npmdoc-cfork/build/screenCapture.npmPackageListing.svg)
 
@@ -18,47 +23,38 @@
 {
     "author": {
         "name": "fengmk2",
-        "email": "fengmk2@gmail.com",
         "url": "http://fengmk2.com"
     },
     "bugs": {
-        "url": "https://github.com/node-modules/cfork/issues",
-        "email": "fengmk2@gmail.com"
+        "url": "https://github.com/node-modules/cfork/issues"
     },
     "contributors": [
         {
             "name": "fengmk2",
-            "email": "fengmk2@gmail.com",
             "url": "https://github.com/fengmk2"
         },
         {
             "name": "JacksonTian",
-            "email": "shyvo1987@gmail.com",
             "url": "https://github.com/JacksonTian"
         },
         {
             "name": "dead-horse",
-            "email": "heyiyu.deadhorse@gmail.com",
             "url": "https://github.com/dead-horse"
         },
         {
             "name": "coderhaoxin",
-            "email": "coderhaoxin@outlook.com",
             "url": "https://github.com/coderhaoxin"
         },
         {
             "name": "luckydrq",
-            "email": "drqzju@gmail.com",
             "url": "https://github.com/luckydrq"
         },
         {
             "name": "hustxiaoc",
-            "email": "xiaoc.hust@gmail.com",
             "url": "https://github.com/hustxiaoc"
         },
         {
             "name": "Flandre Scarlet",
-            "email": "i@2333.moe",
             "url": "https://github.com/XadillaX"
         }
     ],
@@ -98,13 +94,11 @@
     "main": "index.js",
     "maintainers": [
         {
-            "name": "fengmk2",
-            "email": "fengmk2@gmail.com"
+            "name": "fengmk2"
         }
     ],
     "name": "cfork",
     "optionalDependencies": {},
-    "readme": "ERROR: No README data found!",
     "repository": {
         "type": "git",
         "url": "git://github.com/node-modules/cfork.git",
@@ -117,19 +111,10 @@
         "lint": "eslint index.js test",
         "test": "npm run clean && npm run lint && npm run cover && istanbul report json lcov html text"
     },
-    "version": "1.6.0"
+    "version": "1.6.0",
+    "bin": {}
 }
 ```
-
-
-
-# <a name="apidoc.tableOfContents"></a>[table of contents](#apidoc.tableOfContents)
-
-#### [module cfork](#apidoc.module.cfork)
-
-
-
-# <a name="apidoc.module.cfork"></a>[module cfork](#apidoc.module.cfork)
 
 
 
