@@ -61,12 +61,157 @@
 
     <li class="apidocModuleLi"><a href="#apidoc.module.cfork">module cfork</a><ol>
 
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.cfork.cfork">
+            function <span class="apidocSignatureSpan"></span>cfork
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
     </ol></li>
 
 </ol></div>
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.cfork" id="apidoc.module.cfork">module cfork</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.cfork.cfork" id="apidoc.element.cfork.cfork">
+        function <span class="apidocSignatureSpan"></span>cfork
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function fork(options) {
+  if (cluster.isWorker) {
+    return;
+  }
+
+  options = options || {};
+  var count = options.count || os.cpus().length;
+  var refork = options.refork !== false;
+  var limit = options.limit || 60;
+  var duration = options.duration || 60000; // 1 min
+  var reforks = [];
+  var attachedEnv = options.env || {};
+  var newWorker;
+
+  if (options.exec) {
+    var opts = {
+      exec: options.exec
+    };
+
+    if (options.execArgv !== undefined) {
+      opts.execArgv = options.execArgv;
+    }
+
+    if (options.args !== undefined) {
+      opts.args = options.args;
+    }
+    if (options.silent !== undefined) {
+      opts.silent = options.silent;
+    }
+
+    // https://github.com/gotwarlost/istanbul#multiple-process-usage
+    // Multiple Process under istanbul
+    if (options.autoCoverage &#x26;&#x26; process.env.running_under_istanbul) {
+      // use coverage for forked process
+      // disabled reporting and output for child process
+      // enable pid in child process coverage filename
+      var args = [
+        &#x27;cover&#x27;, &#x27;--report&#x27;, &#x27;none&#x27;, &#x27;--print&#x27;, &#x27;none&#x27;, &#x27;--include-pid&#x27;,
+        opts.exec,
+      ];
+      if (opts.args &#x26;&#x26; opts.args.length &#x3e; 0) {
+        args.push(&#x27;--&#x27;);
+        args = args.concat(opts.args);
+      }
+
+      opts.exec = &#x27;./node_modules/.bin/istanbul&#x27;;
+      opts.args = args;
+    }
+
+    cluster.setupMaster(opts);
+  }
+
+  var disconnects = {};
+  var disconnectCount = 0;
+  var unexpectedCount = 0;
+
+  cluster.on(&#x27;disconnect&#x27;, function (worker) {
+    disconnectCount++;
+    var isDead = worker.isDead &#x26;&#x26; worker.isDead();
+    console.error(&#x27;[%s] [cfork:master:%s] worker:%s disconnect (suicide: %s, state: %s, isDead: %s)&#x27;,
+      Date(), process.pid, worker.process.pid, worker.suicide, worker.state, isDead);
+    if (isDead) {
+      // worker has terminated before disconnect
+      console.error(&#x27;[%s] [cfork:master:%s] don\&#x27;t fork, because worker:%s exit event emit before disconnect&#x27;,
+        Date(), process.pid, worker.process.pid);
+      return;
+    }
+
+    disconnects[worker.process.pid] = Date();
+    if (allow()) {
+      newWorker = forkWorker(worker._clusterSettings);
+      newWorker._clusterSettings = worker._clusterSettings;
+      console.error(&#x27;[%s] [cfork:master:%s] new worker:%s fork (state: %s)&#x27;,
+        Date(), process.pid, newWorker.process.pid, newWorker.state);
+    } else {
+      console.error(&#x27;[%s] [cfork:master:%s] don\&#x27;t fork new work (refork: %s)&#x27;,
+        Date(), process.pid, refork);
+    }
+  });
+
+  cluster.on(&#x27;exit&#x27;, function (worker, code, signal) {
+    var isExpected = !!disconnects[worker.process.pid];
+    var isDead = worker.isDead &#x26;&#x26; worker.isDead();
+    console.error(&#x27;[%s] [cfork:master:%s] worker:%s exit (code: %s, suicide: %s, state: %s, isDead: %s, isExpected: %s)&#x27;,
+      Date(), process.pid, worker.process.pid, code, worker.suicide, worker.state, isDead, isExpected);
+    if (isExpected) {
+      delete disconnects[worker.process.pid];
+      // worker disconnect first, exit expected
+      return;
+    }
+
+    unexpectedCount++;
+    if (allow()) {
+      newWorker = forkWorker(worker._clusterSettings);
+      newWorker._clusterSettings = worker._clusterSettings;
+      console.error(&#x27;[%s] [cfork:master:%s] new worker:%s fork (state: %s)&#x27;,
+        Date(), process.pid, newWorker.process.pid, newWorker.state);
+    } else {
+      console.error(&#x27;[%s] [cfork:master:%s] don\&#x27;t fork new work (refork: %s)&#x27;,
+        Date(), process.pid, refork);
+    }
+    cluster.emit(&#x27;unexpectedExit&#x27;, worker, code, signal);
+  });
+
+  // defer to set the listeners
+  // so you can listen this by your own
+  defer(function () {
+    if (process.listeners(&#x27;uncaughtException&#x27;).length === 0) {
+      process.on(&#x27;uncaughtException&#x27;, onerror);
+    }
+    if (cluster.listeners(&#x27;unexpectedExit&#x27;).length === 0) {
+      cluster.on(&#x27;unexpectedExit&#x27;, onUnexpected);
+    }
+    if (cluster.listeners(&#x27;reachReforkLimit&#x27;).length === 0) {
+      cluster.on(&#x27;reachReforkLimit&#x27;, onReachReforkLimit);
+    }
+  });
+
+  for (var i = 0; i &#x3c; count; i++) {
+    newWorker = forkWorker();
+    newWorker._clusterSettings = cluster.settings;
+  }
+
+  // fork slaves ...</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 </div>
 
